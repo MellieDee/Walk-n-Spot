@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { reverseMultiplyAndSum } = require('validator/lib/util/algorithms');
-const sequelize = require('../server/config/connection');
+const sequelize = require('../config/connection');
 const { Trail, User, Animal, TrailAnimal } = require('../models');
 
 // Homepage route
