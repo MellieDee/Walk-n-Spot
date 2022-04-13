@@ -1,31 +1,25 @@
-const { Model, DataTypes } = require('sequelize');
-const sequelize = require('../config/connection');
+const { Schema, model } = require('mongoose');
 
-// create  Animal model
-class Animal extends Model {
-}
-
-Animal.init(
+const animalSchema = new Schema(
   {
-    id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      primaryKey: true,
-      autoIncrement: true
+    species: { //admin will verify
+      type: String,
     },
-
     animal_name: {
-      type: DataTypes.STRING,
-      allowNull: false,
+      type: String,
+    },
+    animal_count: { //user cannot update this number
+      type: Number,
     },
   },
-  // 2nd param of init
   {
-    sequelize,
-    freezeTableName: true,
-    underscored: true,
-    modelName: 'animal'
+    toJSON: {
+      virtuals: true,
+      getters: true
+    }
   }
-)
+);
+
+const Animal = model('Animal', animalSchema);
 
 module.exports = Animal;

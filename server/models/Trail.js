@@ -1,66 +1,56 @@
-const { Model, DataTypes } = require('sequelize');
-const sequelize = require('../config/connection');
+const { Schema, model } = require('mongoose');
 
-// create our User model
-class Trail extends Model { }
-
-
-
-Trail.init(
+const trailSchema = new Schema(
   {
-    id: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      primaryKey: true,
-      autoIncrement: true
+    trail_name: { //Title
+      type: String,
     },
 
-    trail_name: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-
-    city_name: {
-      type: DataTypes.STRING,
-      allowNull: true,
+    city_name: { //make sure display
+      type: String,
     },
 
     lat: {
-      type: DataTypes.STRING,
-      allowNull: true,
+      type: Number,
     },
 
     lon: {
-      type: DataTypes.STRING,
-      allowNull: true,
+      type: Number,
     },
 
-    trail_img: {
-      type: DataTypes.STRING,
-      allowNull: true,
+    trail_img: { //image link from free source
+      type: String,
     },
-    animal_id: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'animal',
-        key: 'id'
+
+    tag: { //example: dog-friendly
+      type: [String],
+    },
+
+    description: {
+      type: String,
+    },
+
+    Trail_info: { //website for more info
+      type: String,
+    },
+
+    animal: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Animal'
       }
-    },
-    trail_info: {
-      type: DataTypes.STRING,
-      allowNull: true,
-      isURL: true
-    },
+    ],
 
+    post: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Post'
+      }
+    ],
   },
-  {
-    sequelize,
-    timestamps: false,
-    freezeTableName: true,
-    underscored: true,
-    modelName: 'trail'
-  }
+
 )
 
-module.exports = Trail
+const Trail= model('Trail', trailSchema);
+
+module.exports = Trail;
