@@ -1,14 +1,10 @@
-const Sequelize = require('sequelize');
+const mongoose = require('mongoose');
 
-require('dotenv').config();
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/walk-n-spot', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true,
+  useFindAndModify: false,
+});
 
-// create connection to our db
-const sequelize = process.env.JAWSDB_URL
-  ? new Sequelize(process.env.JAWSDB_URL)
-  : new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PW, {
-    host: 'localhost',
-    dialect: 'mysql',
-    port: 3306
-  });
-
-module.exports = sequelize;
+module.exports = mongoose.connection;

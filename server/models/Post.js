@@ -1,7 +1,7 @@
 const { Schema, model } = require('mongoose');
 const commentSchema = require('./Comment');
 
-const sightDateFormat = require('../utils/sightDateFormat');
+const sightDateFormat = require('../utils/dateFormat');
 const dateFormat = require('../utils/dateFormat');
 
 const postSchema = new Schema({
@@ -23,7 +23,7 @@ const postSchema = new Schema({
     }
   ],
 
-///////////////maybe add image later
+  ///////////////maybe add image later
 
   postText: {
     type: String,
@@ -38,7 +38,7 @@ const postSchema = new Schema({
     max: '2400-01-01',
     get: date => sightDateFormat(date)
   },
- 
+
   comment: [commentSchema],
 },
   {
