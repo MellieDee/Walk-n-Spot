@@ -35,8 +35,8 @@ const resolvers = {
     },
 
     //find trails base on city (need to add animal and tag filter)
-    trails: async (parent, {city_name}) => {
-      return Trail.find(city_name);
+    trails: async (parent, { city_name }) => {
+      return Trail.find({ city_name });
     },
     //find specific trail
     trail: async (parent, { _id }) => {
@@ -85,24 +85,24 @@ const resolvers = {
       const token = signToken(user);
       return { token, user };
     },
-  
- 
+
+
 
 
     //////Trail////////
     addTrail: async (parent, args) => {
-      const trail = await Trail.create(args); //after client is set up, see if we need args.input instead of args
+      const trail = await Trail.create(args.input); //after client is set up, see if we need args.input instead of args
       //may need something like token for admin
       return trail;
     },
 
     updateTrail: async (parent, args, context) => {
-      var newTrail = args; //same as addTrail, may need to change
+      var newTrail = args.input; //same as addTrail, may need to change
 
       return await Trail.findOneAndUpdate(
-        {_id: args._id},
+        { _id: args.input._id },
         newTrail,
-        {new: true}
+        { new: true }
       );
     },
 
