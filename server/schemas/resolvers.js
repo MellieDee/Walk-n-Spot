@@ -34,6 +34,11 @@ const resolvers = {
       // .populate('myJoinedEvent');
     },
 
+    // find all trails for search bar only (then front end narrows by city & animal maybe trail with related term a la All Trails)
+    trails: async () => {
+      return Trail.find();
+    },
+
     //find trails base on city (need to add animal and tag filter)
     trails: async (parent, { city_name }) => {
       return Trail.find({ city_name });
