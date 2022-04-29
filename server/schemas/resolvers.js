@@ -1,4 +1,4 @@
-const { User, Event, Comment } = require('../models');
+const { User, Trail, Comment } = require('../models');
 const { AuthenticationError } = require('apollo-server-express');
 const { signToken } = require('../utils/auth');
 const mongoose = require('mongoose');
@@ -33,9 +33,21 @@ const resolvers = {
       // .populate('myCurrentEvent')
       // .populate('myJoinedEvent');
     },
+
+    //find trails base on city (need to add animal and tag filter)
+    trails: async (parent, {city_name}) => {
+      return Trail.find(city_name);
+    },
+    //find specific trail
+    trail: async (parent, { _id }) => {
+      return Trail.findOne({ _id });
+    },
+
+
   },
   Mutation: {
 
+    //////User////////
     addUser: async (parent, args) => {
       console.log("Get Signup Info");
       const user = await User.create(args);
@@ -72,8 +84,31 @@ const resolvers = {
 
       const token = signToken(user);
       return { token, user };
-    }
-  }
+    },
+  
+ 
+
+
+    //////Trail////////
+    addTrail: async (parent, args) => {
+      const trail = await Trail.create(args); //after client is set up, see if we need args.input instead of args
+      //may need something like token for admin
+      return trail;
+    },
+
+    updateTrail: async (parent, args, context) => {
+      var newTrail = args; //same as addTrail, may need to change
+
+      return await Trail.findOneAndUpdate(
+        {_id: args._id},
+        newTrail,
+        {new: true}
+      );
+    },
+
+
+  },
+
 };
 
 module.exports = resolvers;
