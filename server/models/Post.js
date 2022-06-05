@@ -8,6 +8,9 @@ const postSchema = new Schema({
   title: {
     type: String,
   },
+  username: {
+    type: String,
+  },
   trail: [
     {
       type: Schema.Types.ObjectId,

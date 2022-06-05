@@ -27,7 +27,7 @@ const typeDefs = gql`
         description: String
         Trail_info: String
         # animal: [Animal]
-        # post: [Post]
+        post: [Post]
     }
 
     type Animal {
@@ -37,16 +37,35 @@ const typeDefs = gql`
         animal_count: Int
     }
 
+    type Post {
+        _id: ID
+        title: String
+        username: String
+        trail: [Trail]
+        animal: [Animal]
+        postText: String
+        createdAt: String
+        sightDate: String
+        # comment: [Comment]
+    }
+
     type Query {
         me: User
         users: [User]
         user(username: String!): User
+
         alltrails: [Trail]
         trails(city_name: String!): [Trail]
         trail(_id: ID!): Trail
+
         allanimals: [Animal]
         animal_species(species: String!): [Animal]
         animal(animal_name: String!): Animal
+
+        allpost_trail(trail: ID!): [Post]
+        allpost_animal(animal: ID!): [Post]
+        post(_id: ID!): Post
+ 
     }
 
     input UserInput {
@@ -73,6 +92,17 @@ const typeDefs = gql`
         animal_count: Int
     }
 
+    input PostInput {
+        title: String
+        username: String
+        trail: ID
+        animal: [ID]
+        postText: String
+        createdAt: String
+        sightDate: String
+        # comment: [Comment]
+    }
+
     type Mutation {
         login(email: String!, password: String!): Auth
         addUser(username: String!, email: String!, password: String!): Auth
@@ -81,6 +111,9 @@ const typeDefs = gql`
         updateTrail(input: TrailInput!): Trail
         addAnimal(input: AnimalInput!): Animal
         updateAnimal(input: AnimalInput!): Animal
+        addPost(input: PostInput!): Post
+        updatePost(postId: ID!, input: PostInput!): Post
+        removePost(postId: ID!): Post
 
         # addEvent(input: EventInput!): Event
         # joinEvent(eventId: ID!): User
