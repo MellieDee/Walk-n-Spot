@@ -1,4 +1,4 @@
-const { User, Trail, Animal, Comment } = require('../models');
+const { User, Trail, Animal, Post, Comment } = require('../models');
 const { AuthenticationError } = require('apollo-server-express');
 const { signToken } = require('../utils/auth');
 const mongoose = require('mongoose');
@@ -36,7 +36,7 @@ const resolvers = {
 
     // find all trails for search bar only (then front end narrows by city & animal maybe trail with related term a la All Trails)
     alltrails: async () => {
-      return Trail.find();
+      return Trail.find().populate('post');
     },
 
     //find trails base on city (need to add animal and tag filter)
@@ -59,6 +59,20 @@ const resolvers = {
     //find specific animal by name
     animal: async (parent, { animal_name }) => {
       return Animal.findOne({ animal_name });
+    },
+
+    allpost_trail: async(parent, { trail }) => {
+      return Post.find({ trail })
+                  .populate('trail')
+                  .populate('animal');
+    },
+    allpost_animal: async (parent, { animal }) => {
+      return Post.find({ animal });
+    },
+    post: async (parent, { _id }) => {
+      return Post.findOne({ _id })
+                .populate('trail')
+                .populate('animal');
     }
 
 
@@ -137,7 +151,36 @@ const resolvers = {
         newAnimal,
         { new: true }
       );
-    }
+    },
+
+
+    /////Post/////////
+    addPost: async (parent, args) => {
+      const post = await Post.create({...args.input});
+      const trail = await Trail.findOneAndUpdate(
+        { _id: args.input.trail },
+        { $push: { post: post._id }},
+        { new: true }
+      )
+
+      return post;
+    },
+
+    updatePost: async (parent, args, context) => {
+      var newPost = args.input;
+
+      return await Post.findOneAndUpdate(
+        { _id: args.input._id},
+        newPost,
+        {new: true}
+      );
+    },
+
+    removePost: async (parent, args) => {
+      return await Post.findOneAndDelete(
+        {_id: args.input._id}
+        );
+    },
 
 
   },
