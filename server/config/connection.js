@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/walk-n-spot', {
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1/walk-n-spot' || 'mongodb://localhost/walk-n-spot', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,

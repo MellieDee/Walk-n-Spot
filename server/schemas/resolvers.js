@@ -1,4 +1,4 @@
-const { User, Trail, Comment } = require('../models');
+const { User, Trail, Animal, Comment } = require('../models');
 const { AuthenticationError } = require('apollo-server-express');
 const { signToken } = require('../utils/auth');
 const mongoose = require('mongoose');
@@ -35,7 +35,7 @@ const resolvers = {
     },
 
     // find all trails for search bar only (then front end narrows by city & animal maybe trail with related term a la All Trails)
-    trails: async () => {
+    alltrails: async () => {
       return Trail.find();
     },
 
@@ -47,6 +47,19 @@ const resolvers = {
     trail: async (parent, { _id }) => {
       return Trail.findOne({ _id });
     },
+
+    //find all animal
+    allanimals: async () => {
+      return Animal.find();
+    },
+    //find all animal with specific species 
+    animal_species: async (parent, { species }) => {
+      return Animal.find({ species });
+    },
+    //find specific animal by name
+    animal: async (parent, { animal_name }) => {
+      return Animal.findOne({ animal_name });
+    }
 
 
   },
@@ -92,8 +105,6 @@ const resolvers = {
     },
 
 
-
-
     //////Trail////////
     addTrail: async (parent, args) => {
       const trail = await Trail.create(args.input); //after client is set up, see if we need args.input instead of args
@@ -112,8 +123,24 @@ const resolvers = {
     },
 
 
-  },
+    /////Animal///////
+    addAnimal: async (parent, args) => {
+      const animal = await Animal.create(args.input);
+      return animal;
+    },
 
+    updateAnimal: async (parent, args, context) => {
+      var newAnimal = args.input;
+
+      return await Animal.findOneAndUpdate(
+        { _id: args.input._id },
+        newAnimal,
+        { new: true }
+      );
+    }
+
+
+  },
 };
 
 module.exports = resolvers;

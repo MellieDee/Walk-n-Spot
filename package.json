@@ -19,12 +19,12 @@
     "url": "https://github.com/MellieDee/Walk-n-Spot/issues"
   },
   "homepage": "https://github.com/MellieDee/Walk-n-Spot#readme",
-
   "devDependencies": {
     "concurrently": "^5.1.0",
     "luxon": "^2.3.1"
   },
   "dependencies": {
-    "dayjs": "^1.11.0"
+    "dayjs": "^1.11.0",
+    "mongoose": "^6.3.5"
   }
 }
