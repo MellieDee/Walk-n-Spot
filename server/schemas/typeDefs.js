@@ -46,7 +46,14 @@ const typeDefs = gql`
         postText: String
         createdAt: String
         sightDate: String
-        # comment: [Comment]
+        comment: [Comment]
+    }
+
+    type Comment {
+        _id: ID
+        commentText: String
+        username: String
+        createdAt: String
     }
 
     type Query {
@@ -94,13 +101,13 @@ const typeDefs = gql`
 
     input PostInput {
         title: String
-        username: String
+        # username: String
         trail: ID
         animal: [ID]
         postText: String
         createdAt: String
         sightDate: String
-        # comment: [Comment]
+        comment: [String]
     }
 
     type Mutation {
@@ -114,13 +121,7 @@ const typeDefs = gql`
         addPost(input: PostInput!): Post
         updatePost(postId: ID!, input: PostInput!): Post
         removePost(postId: ID!): Post
-
-        # addEvent(input: EventInput!): Event
-        # joinEvent(eventId: ID!): User
-        # removeJoined(eventId: ID!): User
-        # updateEvent(eventId: ID!, input: EventInput!): Event
-        # removeEvent(eventId: ID!): Event
-        # addComment(eventId: ID!, commentText: String!) : Event
+        addComment(postId: ID!, commentText: String!) : Post
     }
 
     type Auth {

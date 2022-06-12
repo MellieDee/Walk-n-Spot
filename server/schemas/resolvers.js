@@ -61,18 +61,18 @@ const resolvers = {
       return Animal.findOne({ animal_name });
     },
 
-    allpost_trail: async(parent, { trail }) => {
+    allpost_trail: async (parent, { trail }) => {
       return Post.find({ trail })
-                  .populate('trail')
-                  .populate('animal');
+        .populate('trail')
+        .populate('animal');
     },
     allpost_animal: async (parent, { animal }) => {
       return Post.find({ animal });
     },
     post: async (parent, { _id }) => {
       return Post.findOne({ _id })
-                .populate('trail')
-                .populate('animal');
+        .populate('trail')
+        .populate('animal');
     }
 
 
@@ -156,10 +156,10 @@ const resolvers = {
 
     /////Post/////////
     addPost: async (parent, args) => {
-      const post = await Post.create({...args.input});
+      const post = await Post.create({ ...args.input });
       const trail = await Trail.findOneAndUpdate(
         { _id: args.input.trail },
-        { $push: { post: post._id }},
+        { $push: { post: post._id } },
         { new: true }
       )
 
@@ -170,17 +170,42 @@ const resolvers = {
       var newPost = args.input;
 
       return await Post.findOneAndUpdate(
-        { _id: args.input._id},
+        { _id: args.input._id },
         newPost,
-        {new: true}
+        { new: true }
       );
     },
 
     removePost: async (parent, args) => {
       return await Post.findOneAndDelete(
-        {_id: args.input._id}
-        );
+        { _id: args.input._id }
+      );
     },
+
+
+
+    /////Comment///////
+    addComment: async (parent, { postId, username, commentText }, context) => {
+
+      console.log(postId)
+      console.log(context.user)
+      const comment = await Post.findOneAndUpdate(
+        { _id: postId },
+        { $push: { comment: { commentText, username: context.user.username } } },
+        { new: true, runValidators: true }
+      );
+
+      // await User.findOneAndUpdate(
+      //   { _id: context.user._id },
+      //   { $push: { comment: { commentText, username: username } } },
+      //   { new: true, runValidators: true }
+      // )
+
+
+      return comment;
+
+    }
+
 
 
   },
