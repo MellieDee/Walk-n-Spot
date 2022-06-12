@@ -12,8 +12,8 @@ const typeDefs = gql`
         favoriteAnimal: String
         # totalCount: Int
         # savedTrail: [Trail]
-        # myPost: [Post]
-        # comment: [ Comment ]
+        myPost: [Post]
+        comment: [ Comment ]
     }
 
     type Trail {
@@ -26,7 +26,7 @@ const typeDefs = gql`
         tag: [String]
         description: String
         Trail_info: String
-        # animal: [Animal]
+        animal: [Animal]
         post: [Post]
     }
 
@@ -89,8 +89,8 @@ const typeDefs = gql`
         tag: [String]
         description: String
         Trail_info: String
-        # animal: [Animal]
-        # post: [Post]
+        animal: [String]
+        post: [String]
     }
 
     input AnimalInput {
@@ -101,7 +101,7 @@ const typeDefs = gql`
 
     input PostInput {
         title: String
-        # username: String
+        username: String
         trail: ID
         animal: [ID]
         postText: String
@@ -115,7 +115,7 @@ const typeDefs = gql`
         addUser(username: String!, email: String!, password: String!): Auth
         updateUser(input: UserInput!): User
         addTrail(input: TrailInput!): Trail
-        updateTrail(input: TrailInput!): Trail
+        updateTrail(trailId: ID!, input: TrailInput!): Trail
         addAnimal(input: AnimalInput!): Animal
         updateAnimal(input: AnimalInput!): Animal
         addPost(input: PostInput!): Post

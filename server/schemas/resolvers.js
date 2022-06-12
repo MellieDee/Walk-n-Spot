@@ -22,9 +22,10 @@ const resolvers = {
     users: async () => {
       return User.find()
         .select('-__v -password')
-      // .populate('myCurrentEvent')
-      // .populate('myJoinedEvent');
+        .populate('myPost')
+        .populate('comment');
     },
+
     // get a user by username
     user: async (parent, { username }) => {
       console.log(username);
@@ -36,16 +37,23 @@ const resolvers = {
 
     // find all trails for search bar only (then front end narrows by city & animal maybe trail with related term a la All Trails)
     alltrails: async () => {
-      return Trail.find().populate('post');
+      return Trail.find()
+        .populate('post')
+        .populate('animal');
     },
 
     //find trails base on city (need to add animal and tag filter)
     trails: async (parent, { city_name }) => {
-      return Trail.find({ city_name });
+      return Trail.find({ city_name })
+        .populate('post')
+        .populate('animal')
+        ;
     },
     //find specific trail
     trail: async (parent, { _id }) => {
-      return Trail.findOne({ _id });
+      return Trail.findOne({ _id })
+        .populate('post')
+      s.populate('animal');
     },
 
     //find all animal
@@ -130,10 +138,11 @@ const resolvers = {
       var newTrail = args.input; //same as addTrail, may need to change
 
       return await Trail.findOneAndUpdate(
-        { _id: args.input._id },
+        { _id: args.trailId },
         newTrail,
         { new: true }
-      );
+      ).populate('post')
+        .populate('animal');
     },
 
 
