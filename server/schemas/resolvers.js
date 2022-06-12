@@ -31,8 +31,8 @@ const resolvers = {
       console.log(username);
       return User.findOne({ username })
         .select('-__v -password')
-      // .populate('myCurrentEvent')
-      // .populate('myJoinedEvent');
+        .populate('myPost')
+        .populate('comment');
     },
 
     // find all trails for search bar only (then front end narrows by city & animal maybe trail with related term a la All Trails)
@@ -164,15 +164,25 @@ const resolvers = {
 
 
     /////Post/////////
-    addPost: async (parent, args) => {
-      const post = await Post.create({ ...args.input });
+    addPost: async (parent, args, context) => {
+      const post = await Post.create({ ...args.input })
+
       const trail = await Trail.findOneAndUpdate(
         { _id: args.input.trail },
         { $push: { post: post._id } },
         { new: true }
+      );
+      const user = await User.findOneAndUpdate(
+        { _id: context.user._id },
+        { $push: { myPost: post._id } },
+        { new: true }
       )
 
-      return post;
+
+      return post
+        .populate('trail')
+        .execPopulate()
+
     },
 
     updatePost: async (parent, args, context) => {
@@ -202,6 +212,11 @@ const resolvers = {
         { _id: postId },
         { $push: { comment: { commentText, username: context.user.username } } },
         { new: true, runValidators: true }
+      )
+      const user = await User.findOneAndUpdate(
+        { _id: context.user._id },
+        { $push: { comment: { commentText, username: username } } },
+        { new: true }
       );
 
       // await User.findOneAndUpdate(
@@ -211,7 +226,9 @@ const resolvers = {
       // )
 
 
-      return comment;
+      return comment
+        .populate('comment')
+        .execPopulate();
 
     }
 
